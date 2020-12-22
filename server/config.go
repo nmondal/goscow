@@ -10,8 +10,15 @@ import (
 type VerbType string
 
 const (
-	GET  = "get"
-	POST = "post"
+	CONNECT = "connect"
+	DELETE  = "delete"
+	GET     = "get"
+	HEAD    = "head"
+	OPTIONS = "options"
+	PATCH   = "patch"
+	POST    = "post"
+	PUT     = "put"
+	TRACE   = "trace"
 )
 
 type Route struct {
