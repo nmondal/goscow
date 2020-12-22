@@ -1,0 +1,13 @@
+# This shows how GOSCOW service is routed
+
+# from where to serve the static files
+port : 8000
+static : _/static-files
+
+# routes information
+get:
+  /hello : _/scripts/js/hello.js
+  /param/:id  : _/scripts/js/param.js
+
+post:
+  /hello : _/scripts/js/hello.js
