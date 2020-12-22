@@ -43,7 +43,7 @@ func From(configFile string) (*GoSCowConfig, error) {
 	configString := string(data)
 	configString = strings.ReplaceAll(configString, "_/", baseDir)
 	goSCowConfig := GoSCowConfig{}
-	err = yaml.Unmarshal(data, &goSCowConfig)
+	err = yaml.Unmarshal([]byte(configString), &goSCowConfig)
 	if err != nil {
 		return nil, err
 	}
