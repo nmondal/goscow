@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"goscow/scripting"
 	"net/http"
+	"os"
 )
 
 func handle(scriptFile string, context echo.Context) (interface{}, error) {
@@ -15,7 +16,7 @@ func handle(scriptFile string, context echo.Context) (interface{}, error) {
 }
 
 func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
-	verbHandlerMap := make(map[string]func(string, echo.HandlerFunc, ...echo.MiddlewareFunc) *echo.Route)
+	verbHandlerMap := make(map[VerbType]func(string, echo.HandlerFunc, ...echo.MiddlewareFunc) *echo.Route)
 	// setup - how neat is this ?
 	verbHandlerMap[CONNECT] = e.CONNECT
 	verbHandlerMap[DELETE] = e.DELETE
@@ -29,7 +30,10 @@ func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 	// now setup shop
 	for verb, routeInfo := range cfg.Routes {
 		handlerFunction := verbHandlerMap[verb]
-		for uri, script := range routeInfo.Table {
+		for uri, script := range routeInfo {
+			if _, err := os.Stat(script); os.IsNotExist(err) {
+				return err
+			}
 			handlerFunction(uri, func(c echo.Context) error {
 				res, err := handle(script, c)
 				if err != nil {

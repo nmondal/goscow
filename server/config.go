@@ -21,17 +21,12 @@ const (
 	TRACE   = "trace"
 )
 
-type Route struct {
-	Verb  VerbType
-	Table map[string]string
-}
-
 type GoSCowConfig struct {
 	Base   string
 	Name   string
 	Port   int16
 	Static string
-	Routes map[string]Route
+	Routes map[VerbType]map[string]string
 }
 
 func From(configFile string) (*GoSCowConfig, error) {
