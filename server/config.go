@@ -26,6 +26,7 @@ type GoSCowConfig struct {
 	Name   string
 	Port   int16
 	Static string
+	Reload bool
 	Routes map[VerbType]map[string]string
 }
 

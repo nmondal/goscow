@@ -9,10 +9,10 @@ import (
 	"os"
 )
 
-func handle(scriptFile string, context echo.Context) (interface{}, error) {
+func handle(reload bool, scriptFile string, context echo.Context) (interface{}, error) {
 	argMap := make(map[string]interface{})
 	argMap["c"] = context
-	return scripting.JS(scriptFile, argMap)
+	return scripting.Execute(reload, scriptFile, argMap)
 }
 
 func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
@@ -35,7 +35,7 @@ func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 				return err
 			}
 			handlerFunction(uri, func(c echo.Context) error {
-				res, err := handle(script, c)
+				res, err := handle(cfg.Reload, script, c)
 				if err != nil {
 					return err
 				}

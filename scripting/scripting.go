@@ -1,13 +1,16 @@
 package scripting
 
 import (
+	"fmt"
 	"github.com/dop251/goja"
 	"io/ioutil"
+	"path/filepath"
+	"strings"
 )
 
 var jsScripts = make(map[string]*goja.Program)
 
-func runProgram(p *goja.Program, args map[string]interface{}) (interface{}, error) {
+func runJSProgram(p *goja.Program, args map[string]interface{}) (interface{}, error) {
 	vm := goja.New()
 	for varName, value := range args {
 		vm.Set(varName, value)
@@ -19,7 +22,7 @@ func runProgram(p *goja.Program, args map[string]interface{}) (interface{}, erro
 	return v.Export(), nil
 }
 
-func JS(filePath string, args map[string]interface{}) (interface{}, error) {
+func doJs(reload bool, filePath string, args map[string]interface{}) (interface{}, error) {
 	var p *goja.Program
 	if program, ok := jsScripts[filePath]; ok {
 		p = program
@@ -33,7 +36,20 @@ func JS(filePath string, args map[string]interface{}) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
+		if !reload {
+			jsScripts[filePath] = program
+		}
 		p = program
 	}
-	return runProgram(p, args)
+	return runJSProgram(p, args)
+}
+
+func Execute(reload bool, filePath string, args map[string]interface{}) (interface{}, error) {
+	extension := strings.ToLower(filepath.Ext(filePath))
+	switch extension {
+	case ".js":
+		return doJs(reload, filePath, args)
+	default:
+		panic(fmt.Sprintf("Non Registered extension : '%s'", extension))
+	}
 }

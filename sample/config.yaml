@@ -4,6 +4,9 @@
 port : 8000
 # from where to serve the static files
 static : _/static-files
+# script reloading - automatic
+reload : true
+
 # routes information
 routes:
   get:
