@@ -15,3 +15,7 @@ routes:
 
   post:
     /hello : _/scripts/js/hello.js
+
+# db connections
+dbs:
+  neo4j :
