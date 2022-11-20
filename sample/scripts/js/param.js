@@ -1,1 +1,1 @@
-"This is params!"
+"The param value is : " + $.Param("id") 

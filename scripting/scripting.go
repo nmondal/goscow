@@ -14,7 +14,7 @@ var jsScripts = make(map[string]*goja.Program)
 
 func runJSProgram(p *goja.Program, context echo.Context) (interface{}, error) {
 	vm := goja.New()
-	vm.Set("ctx", context)
+	vm.Set("$", context)
 	v, err := vm.RunProgram(p)
 	if err != nil {
 		return nil, err
