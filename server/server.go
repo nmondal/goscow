@@ -2,18 +2,13 @@ package server
 
 import (
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"goscow/scripting"
 	"net/http"
 	"os"
-)
 
-func handle(reload bool, scriptFile string, context echo.Context) (interface{}, error) {
-	argMap := make(map[string]interface{})
-	argMap["c"] = context
-	return scripting.Execute(reload, scriptFile, argMap)
-}
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+)
 
 func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 	verbHandlerMap := make(map[VerbType]func(string, echo.HandlerFunc, ...echo.MiddlewareFunc) *echo.Route)
@@ -34,12 +29,12 @@ func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 			if _, err := os.Stat(script); os.IsNotExist(err) {
 				return err
 			}
-			handlerFunction(uri, func(c echo.Context) error {
-				res, err := handle(cfg.Reload, script, c)
+			handlerFunction(uri, func(context echo.Context) error {
+				res, err := scripting.Execute(cfg.Reload, script, context)
 				if err != nil {
 					return err
 				}
-				return c.String(http.StatusOK, fmt.Sprintf("%s", res))
+				return context.String(http.StatusOK, fmt.Sprintf("%s", res))
 			})
 		}
 	}

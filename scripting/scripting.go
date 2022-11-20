@@ -7,15 +7,14 @@ import (
 	"strings"
 
 	"github.com/dop251/goja"
+	"github.com/labstack/echo/v4"
 )
 
 var jsScripts = make(map[string]*goja.Program)
 
-func runJSProgram(p *goja.Program, args map[string]interface{}) (interface{}, error) {
+func runJSProgram(p *goja.Program, context echo.Context) (interface{}, error) {
 	vm := goja.New()
-	for varName, value := range args {
-		vm.Set(varName, value)
-	}
+	vm.Set("ctx", context)
 	v, err := vm.RunProgram(p)
 	if err != nil {
 		return nil, err
@@ -23,7 +22,7 @@ func runJSProgram(p *goja.Program, args map[string]interface{}) (interface{}, er
 	return v.Export(), nil
 }
 
-func doJs(reload bool, filePath string, args map[string]interface{}) (interface{}, error) {
+func doJs(reload bool, filePath string, context echo.Context) (interface{}, error) {
 	var p *goja.Program
 	if program, ok := jsScripts[filePath]; ok {
 		p = program
@@ -42,14 +41,14 @@ func doJs(reload bool, filePath string, args map[string]interface{}) (interface{
 		}
 		p = program
 	}
-	return runJSProgram(p, args)
+	return runJSProgram(p, context)
 }
 
-func Execute(reload bool, filePath string, args map[string]interface{}) (interface{}, error) {
+func Execute(reload bool, filePath string, context echo.Context) (interface{}, error) {
 	extension := strings.ToLower(filepath.Ext(filePath))
 	switch extension {
 	case ".js":
-		return doJs(reload, filePath, args)
+		return doJs(reload, filePath, context)
 	default:
 		panic(fmt.Sprintf("Non Registered extension : '%s'", extension))
 	}
