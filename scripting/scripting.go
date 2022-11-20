@@ -2,10 +2,11 @@ package scripting
 
 import (
 	"fmt"
-	"github.com/dop251/goja"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+
+	"github.com/dop251/goja"
 )
 
 var jsScripts = make(map[string]*goja.Program)
