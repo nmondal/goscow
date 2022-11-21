@@ -1,10 +1,11 @@
 package server
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type VerbType string
@@ -19,6 +20,13 @@ const (
 	POST    = "post"
 	PUT     = "put"
 	TRACE   = "trace"
+)
+
+const (
+	JSON        = "json"
+	JSON_PRETTY = "jsonp"
+	XML         = "xml"
+	XML_PRETTY  = "xmlp"
 )
 
 type GoSCowConfig struct {

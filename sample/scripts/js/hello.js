@@ -1,1 +1,2 @@
-"hello, world"
+x = {  "r" : "hello, world!" };
+x; // return 

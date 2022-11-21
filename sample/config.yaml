@@ -10,8 +10,8 @@ reload : true
 # routes information
 routes:
   get:
-    /hello : _/scripts/js/hello.js
-    /param/:id  : _/scripts/js/param.js
+    /hello : json@_/scripts/js/hello.js
+    /param/:id  : json@_/scripts/js/param.js
 
   post:
     /hello : _/scripts/js/hello.js

@@ -5,6 +5,7 @@ import (
 	"goscow/scripting"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -25,7 +26,15 @@ func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 	// now setup shop
 	for verb, routeInfo := range cfg.Routes {
 		handlerFunction := verbHandlerMap[verb]
-		for uri, script := range routeInfo {
+		for uri, scriptInfo := range routeInfo {
+			script := scriptInfo
+			rtype := ""
+			rtarr := strings.Split(scriptInfo, "@")
+			if len(rtarr) != 1 {
+				script = rtarr[1]
+				rtype = rtarr[0]
+			}
+
 			if _, err := os.Stat(script); os.IsNotExist(err) {
 				return err
 			}
@@ -34,7 +43,18 @@ func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 				if err != nil {
 					return err
 				}
-				return context.String(http.StatusOK, fmt.Sprintf("%s", res))
+				switch rtype {
+				case JSON:
+					return context.JSON(http.StatusOK, res)
+				case JSON_PRETTY:
+					return context.JSONPretty(http.StatusOK, res, "\t")
+				case XML:
+					return context.XML(http.StatusOK, res)
+				case XML_PRETTY:
+					return context.XMLPretty(http.StatusOK, res, "\t")
+				default:
+					return context.String(http.StatusOK, fmt.Sprintf("%s", res))
+				}
 			})
 		}
 	}
