@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/dop251/goja v0.0.0-20221118162653-d4bf6fde1b86
+	github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/mitchellh/mapstructure v1.4.0
 	gopkg.in/yaml.v2 v2.4.0

@@ -7,13 +7,18 @@ import (
 	"strings"
 
 	"github.com/dop251/goja"
+	"github.com/dop251/goja_nodejs/console"
+	"github.com/dop251/goja_nodejs/require"
 	"github.com/labstack/echo/v4"
 )
 
 var jsScripts = make(map[string]*goja.Program)
+var jsRegistry = new(require.Registry) // registry
 
 func runJSProgram(p *goja.Program, context echo.Context) (interface{}, error) {
 	vm := goja.New()
+	jsRegistry.Enable(vm) // enable it
+	console.Enable(vm)    // enable console
 	vm.Set("$", context)
 	v, err := vm.RunProgram(p)
 	if err != nil {
