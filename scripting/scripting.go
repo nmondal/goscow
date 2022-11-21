@@ -2,7 +2,7 @@ package scripting
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -32,7 +32,7 @@ func doJs(reload bool, filePath string, context echo.Context) (interface{}, erro
 	if program, ok := jsScripts[filePath]; ok {
 		p = program
 	} else {
-		data, err := ioutil.ReadFile(filePath) // just pass the file name
+		data, err := os.ReadFile(filePath) // just pass the file name
 		if err != nil {
 			return nil, err
 		}
