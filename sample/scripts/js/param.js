@@ -1,1 +1,2 @@
-"The param value is : " + $.Param("id") 
+let x = { "id" : $.Param("id") };
+x;// return 

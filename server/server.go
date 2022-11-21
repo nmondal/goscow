@@ -48,10 +48,7 @@ func setupRoutes(e *echo.Echo, cfg *GoSCowConfig) error {
 					return context.JSON(http.StatusOK, res)
 				case JSON_PRETTY:
 					return context.JSONPretty(http.StatusOK, res, "\t")
-				case XML:
-					return context.XML(http.StatusOK, res)
-				case XML_PRETTY:
-					return context.XMLPretty(http.StatusOK, res, "\t")
+				// Should we use XML at all? Possibly not
 				default:
 					return context.String(http.StatusOK, fmt.Sprintf("%s", res))
 				}
