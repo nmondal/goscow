@@ -1,0 +1,32 @@
+#%RAML 1.0
+title: Demo Types Association 
+mediaType: application/json
+types:
+
+  Param:
+    type: object
+    properties:
+      id : string
+
+  HelloResponse:
+    type: object
+    properties:
+      r : string
+
+
+/param/{paramId}:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Param
+
+/hello:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: HelloResponse
+
