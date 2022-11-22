@@ -6,7 +6,8 @@ port : 8000
 static : _/static-files
 # script reloading - automatic
 reload : true
-
+# describing end points input -> output 
+description: _/scripts/routes.raml
 # routes information
 routes:
   get:
