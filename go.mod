@@ -10,7 +10,10 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/itchyny/timefmt-go v0.1.4 // indirect
+require (
+	github.com/itchyny/timefmt-go v0.1.4 // indirect
+	go.starlark.net v0.0.0-20241125201518-c05ff208a98f // indirect
+)
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
