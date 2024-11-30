@@ -1,22 +1,24 @@
 # This shows how GOSCOW service is routed
 
 # port of the server
-port : 8000
+port: 8000
 # from where to serve the static files
-static : _/static-files
+static: _/static-files
 # script reloading - automatic
-reload : true
-# describing end points input -> output 
+reload: true
+# describing end points input -> output
 description: _/scripts/routes.raml
 # routes information
 routes:
   get:
-    /hello : json@_/scripts/js/hello.js
-    /param/:id  : json@_/scripts/js/param.js
+    /hello: json@_/scripts/js/hello.js
+    /param/:id: json@_/scripts/js/param.js
+    /hellostar: json@_/scripts/starlark/hello.star
+    /paramstar/:id: json@_/scripts/starlark/param.star
 
   post:
-    /hello : _/scripts/js/hello.js
+    /hello: _/scripts/js/hello.js
 
 # db connections
 dbs:
-  neo4j :
+  neo4j:

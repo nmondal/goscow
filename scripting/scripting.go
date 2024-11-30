@@ -10,10 +10,14 @@ import (
 	"github.com/dop251/goja_nodejs/console"
 	"github.com/dop251/goja_nodejs/require"
 	"github.com/labstack/echo/v4"
+	"go.starlark.net/starlark"
+	"go.starlark.net/syntax"
 )
 
 var jsScripts = make(map[string]*goja.Program)
 var jsRegistry = new(require.Registry) // registry
+
+var starlarkScripts = make(map[string]*starlark.Program)
 
 func runJSProgram(p *goja.Program, context echo.Context) (interface{}, error) {
 	vm := goja.New()
@@ -49,11 +53,49 @@ func doJs(reload bool, filePath string, context echo.Context) (interface{}, erro
 	return runJSProgram(p, context)
 }
 
+func runStarlarkProgram(p *starlark.Program, c echo.Context) (interface{}, error) {
+	thread := &starlark.Thread{Name: "thread"}
+	predeclared := getGlobals(c)
+
+	globals, err := p.Init(thread, predeclared)
+	if err != nil {
+		return nil, fmt.Errorf("getting starlark globals: %w", err)
+	}
+	globals.Freeze()
+	main := globals["main"]
+	v, _ := starlark.Call(thread, main, nil, nil)
+	return v, nil
+}
+
+func doStarlark(reload bool, filePath string, context echo.Context) (interface{}, error) {
+	var p *starlark.Program
+	if program, ok := starlarkScripts[filePath]; ok {
+		p = program
+	} else {
+		// compile starlark file
+		_, program, err := starlark.SourceProgramOptions(&syntax.FileOptions{}, filePath, nil, func(s string) bool {
+			return true
+		})
+
+		if err != nil {
+			return nil, fmt.Errorf("compiling starlark file: %w", err)
+		}
+
+		if !reload {
+			starlarkScripts[filePath] = program
+		}
+		p = program
+	}
+	return runStarlarkProgram(p, context)
+}
+
 func Execute(reload bool, filePath string, context echo.Context) (interface{}, error) {
 	extension := strings.ToLower(filepath.Ext(filePath))
 	switch extension {
 	case ".js":
 		return doJs(reload, filePath, context)
+	case ".star":
+		return doStarlark(reload, filePath, context)
 	default:
 		panic(fmt.Sprintf("Non Registered extension : '%s'", extension))
 	}

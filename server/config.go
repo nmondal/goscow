@@ -1,7 +1,7 @@
 package server
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -45,7 +45,7 @@ func From(configFile string) (*GoSCowConfig, error) {
 	}
 	baseDir := filepath.Dir(path) + "/"
 	name := filepath.Base(path)
-	data, err := ioutil.ReadFile(path) // just pass the file name
+	data, err := os.ReadFile(path) // just pass the file name
 	if err != nil {
 		return nil, err
 	}
